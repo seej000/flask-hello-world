@@ -28,3 +28,41 @@ def creating():
     conn.commit()
     conn.close()
     return "Baseball Table Successfully Created"
+
+@app.route('/db_insert')
+def inserting():
+    conn = psycopg2.connect("postgres://lab10_db_ofde_user:vW4uKLc4YKccVCmclWRbrSMDic72bkZt@dpg-cnul33fjbltc73c4fpmg-a/lab10_db_ofde")
+    cur = conn.cursor()
+    cur.execute('''
+    INSERT INTO Basketball (First, Last, City, Name, Number)
+    Values
+    ('Jayson', 'Tatum', 'Boston', 'Celtics', 0),
+    ('Stephen', 'Curry', 'San Francisco', 'Warriors', 30),
+    ('Nikola', 'Jokic', 'Denver', 'Nuggets', 15),
+    ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2);
+''')
+    conn.commit()
+    conn.close()
+    return "Baseball Table Successfully Populated"
+
+@app.route('/db_select')
+def selecting():
+    conn = psycopg2.connect("postgres://lab10_db_ofde_user:vW4uKLc4YKccVCmclWRbrSMDic72bkZt@dpg-cnul33fjbltc73c4fpmg-a/lab10_db_ofde")
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT * FROM Basketball;
+    ''')
+    records = cur.fetchall() # records = [ ('Jayson', 'Tatum', 'Boston', 'Celtics', 0), (....) ....]
+    conn.close()
+    
+    response_string = ""
+    response_string += "<table>"
+    for player in records:
+        response_string += "<tr>"
+        for info in player:
+            response_string += "<td>{}</td>".format(info)
+        response_string += "<tr>"
+    response_string += "</table>"
+    
+    return response_string
+
